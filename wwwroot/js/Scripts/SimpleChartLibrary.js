@@ -277,42 +277,42 @@ function createPieChart(container) {
     });
 }
 
-
 //create a column chart
-function createColumnChart(container) {
+function createColumnChart(container, y_values, x_values, x_param_to_use, title, unit) {
+
+    //make a y-series array here to dynamically add values in case of multiple measures
+    var y_axis_data = [];
+
+    for (var i = 0; i < y_values.length; i++) {
+
+        var obj = { name: y_values[i].name, data: y_values[i].data };
+
+        y_axis_data.push(obj)
+    }
 
     const chart2 = Highcharts.chart(container, {
         chart: {
             type: 'column'
         },
         title: {
-            text: 'Monthly Average Rainfall'
+            text: title
         },
-        subtitle: {
-            text: 'Source: WorldClimate.com'
-        },
-        xAxis: {
-            categories: [
-                'Apr',
-                'May',
-                'Jun',
-                'Jul',
-                'Aug',
-                'Sep'
 
-            ],
-            crosshair: true
+        xAxis: {
+            categories: x_values[x_param_to_use - 1].parameters,
+            crosshair: true,
+            text: x_values[x_param_to_use - 1].name
         },
         yAxis: {
             min: 0,
             title: {
-                text: 'Rainfall (mm)'
+                text: unit
             }
         },
         tooltip: {
             headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
             pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                '<td style="padding:0"><b>{point.y:.1f} $</b></td></tr>',
             footerFormat: '</table>',
             shared: true,
             useHTML: true
@@ -323,40 +323,38 @@ function createColumnChart(container) {
                 borderWidth: 4
             }
         },
-        series: [{
-            name: 'Tokyo',
-            data: [129.2, 144.0, 176.0, 135.6, 148.5, 216.4]
-
-        }, {
-            name: 'London',
-            data: [41.4, 47.0, 48.3, 59.0, 59.6, 52.4]
-
-        }]
+        series: y_axis_data
     });
 }
 
 //Create Line chart
-function createLineChart(container) {
+function createLineChart(container, y_values, x_values, x_param_to_use, title) {
+
+    //make a y-series array here to dynamically add values in case of multiple measures
+    var y_axis_data = [];
+
+    for (var i = 0; i < y_values.length; i++) {
+
+        var obj = { name: y_values[i].name, data: y_values[i].data };
+
+        y_axis_data.push(obj)
+    }
+
     const chart = Highcharts.chart(container, {
 
         title: {
-            text: 'Grades over time'
-        },
-
-        subtitle: {
-            text: 'Source: fiddle.js'
+            text: title
         },
 
         yAxis: {
-            title: {
-                text: 'GPA over time'
-            }
+
         },
 
         xAxis: {
             accessibility: {
-                rangeDescription: 'Range: 1 to 6'
+                rangeDescription: 'Range:' + x_values[0].parameters[0] + ' to' + x_values[0].parameters[x_values[0].parameters.lengh - 1]
             }
+
         },
 
         legend: {
@@ -374,13 +372,7 @@ function createLineChart(container) {
             }
         },
 
-        series: [{
-            name: 'Wazi',
-            data: [4.3934, 5.2503, 5.7177, 6.9658, 9.7031, 11.9931]
-        }, {
-            name: 'Others',
-            data: [2.4916, 2.4064, 29.742, 29.851, 32.490, 30.282]
-        }],
+        series: y_axis_data,
 
         responsive: {
             rules: [{
@@ -400,13 +392,24 @@ function createLineChart(container) {
 }
 
 //create an areaspline chart
-function createAreaSpline(container) {
+function createAreaSpline(container, y_values, x_values, x_param_to_use, title) {
+
+    //make a y-series array here to dynamically add values in case of multiple measures
+    var y_axis_data = [];
+
+    for (var i = 0; i < y_values.length; i++) {
+
+        var obj = { name: y_values[i].name, data: y_values[i].data };
+
+        y_axis_data.push(obj)
+    }
+
     const chart = Highcharts.chart(container, {
         chart: {
             type: 'areaspline'
         },
         title: {
-            text: 'Average fruit consumption during one week'
+            text: title
         },
         legend: {
             layout: 'vertical',
@@ -420,15 +423,7 @@ function createAreaSpline(container) {
                 Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF'
         },
         xAxis: {
-            categories: [
-                'Monday',
-                'Tuesday',
-                'Wednesday',
-                'Thursday',
-                'Friday',
-                'Saturday',
-                'Sunday'
-            ],
+            categories: x_values[0].parameters,
             plotBands: [{ // visualize the weekend
                 from: 4.5,
                 to: 6.5,
@@ -452,13 +447,7 @@ function createAreaSpline(container) {
                 fillOpacity: 0.5
             }
         },
-        series: [{
-            name: 'John',
-            data: [3, 4, 3, 5, 4, 10, 12]
-        }, {
-            name: 'Jane',
-            data: [1, 3, 4, 3, 3, 5, 4]
-        }]
+        series: y_axis_data
     });
 }
 

@@ -7,8 +7,8 @@ namespace ChartsUsingMdx.Models
 {
     public class DataObj
     {
-        public string HeaderName { get; set; }
-        public List<float> Values { get; set; }
+        public string Name { get; set; }
+        public List<float> Data { get; set; }
         public List<string> Parameters { get; set; }
     }
 }

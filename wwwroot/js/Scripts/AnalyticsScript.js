@@ -1,42 +1,48 @@
 ﻿//Corresponds to the Analytics/Index.cshtml view
-/*How  to do a fetch POST request vanilla js*/
-
-/*
-fetch('link here', {
-    method: 'POST',
-    headers: {
-        'Content-Type':'application/json'
-    },
-    body: {
-        JSON.stringify({
-            name:'user1'
-        })
-    }
-})
-    .then(res => { return res.json() })
-    .catch(error=>console.log(error))
-*/
-function makeChart(data) {
-    //data contains two objects of the same type but server different purposes
-    //consider making a model class to hold the thing
 
 
-}
+
+
+
 
 function getDataFromServer() {
 
-    var str;
+    console.log("The process has started!")  
 
-    fetch('https://localhost:44335/analytics/json')
-        .then((res) => res.json())
-        .then((data) => {
-            console.log(data)
-            
-            makeChart(data);
+    fetch('https://localhost:44335/analytics/json?id=3')
+        .then(response => {
+            return response.json();
         })
-        .catch(error => console.log(error))
+        .then(data => {
+            console.log(data)
+            createColumnChart('container1',data.y_values,data.x_values,1,'Product Cost v Unit price in Territories','Dollars ($)')
+            
+        })
+        .catch(error => { console.log(error) })
 
-   
+    fetch('https://localhost:44335/analytics/json?id=2')
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            console.log(data)
+
+            createLineChart('container2', data.y_values, data.x_values, 1,'Sales in LifeTime')
+
+        })
+        .catch(error => { console.log(error) })
+
+    fetch('https://localhost:44335/analytics/json?id=3')
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            console.log(data)
+
+            createAreaSpline('container3', data.y_values, data.x_values, 1, 'Product Cost v Unit price in Territories', 'Dollars ($)')
+
+        })
+        .catch(error => { console.log(error) })
 }
 
 //declare variables here
@@ -44,5 +50,6 @@ function getDataFromServer() {
 document.getElementById("username").innerHTML = "Wazi"
 
 getDataFromServer();
+
 
 

@@ -16,6 +16,7 @@ namespace ChartsUsingMdx.Controllers
         private string ConnString { get; set; }
         private string DefaultQuery { get; set; }
         private string QuerySecond { get; set; }
+        private string QueryThird { get; set; }
         
         public AnalyticsController()
         {
@@ -41,9 +42,11 @@ namespace ChartsUsingMdx.Controllers
 
                 "from[Adventure Works DW2016]; ";
 
-            this.QuerySecond = "select {[Measures].[Sales Amount]} on columns,[Due Date].[Calendar Year].[Calendar Year] on rows from[Adventure Works DW2016]";
+            this.QuerySecond = "select {[Measures].[Sales Amount]} on columns,[Due Date].[Calendar Year].&[2011]:null on rows from[Adventure Works DW2016]";
 
-            
+            this.QueryThird = "select non empty {[Measures].[Total Product Cost],[Measures].[Unit Price]} on columns," +
+                                "({[Dim Sales Territory 1].[Sales Territory Key].[Sales Territory Key]}) on rows " +
+                                "from[Adventure Works DW2016]";
         }
 
         public IActionResult Index()
@@ -88,12 +91,12 @@ namespace ChartsUsingMdx.Controllers
 
         [HttpGet]
         [Route("json")]
-        public IActionResult GetJsonData()
+        public IActionResult GetJsonData([FromQuery] int id)
         {
             AdomdConnection conn = new AdomdConnection(ConnString);
             conn.Open();
 
-            string commandText = QuerySecond;
+            string commandText = (id==2) ? QuerySecond: QueryThird;
 
             AdomdCommand adomdCommand = new AdomdCommand(commandText, conn);
 
@@ -115,7 +118,7 @@ namespace ChartsUsingMdx.Controllers
             {
                 DataObj obj = new DataObj();
 
-                obj.HeaderName = coltuple.Members[0].Caption.ToString();
+                obj.Name = coltuple.Members[0].Caption.ToString();
 
                 List<float> integerValues = new List<float>();
 
@@ -132,7 +135,7 @@ namespace ChartsUsingMdx.Controllers
                     }
                 }
 
-                obj.Values = integerValues;
+                obj.Data = integerValues; obj.Parameters =new List<string>();
 
                 dataObjs.Add(obj);
 
@@ -147,7 +150,7 @@ namespace ChartsUsingMdx.Controllers
             for(int columnNumber = 0; columnNumber < tupleRows[0].Members.Count; columnNumber++)
             {
                 DataObj obj2 = new DataObj();
-                obj2.HeaderName = "Parameter " + columnNumber;
+                obj2.Name = "Parameter " + columnNumber;
 
                 List<String> stringValues = new List<string>();
 
@@ -156,7 +159,7 @@ namespace ChartsUsingMdx.Controllers
                     stringValues.Add(tupleRows[rowNumber].Members[columnNumber].Caption.ToString());
                 }
 
-                obj2.Parameters = stringValues;
+                obj2.Parameters = stringValues; obj2.Data = new List<float>();
 
                 dataObjs2.Add(obj2);
             }
@@ -166,6 +169,11 @@ namespace ChartsUsingMdx.Controllers
             return new JsonResult(new { y_values = dataObjs, x_values=dataObjs2 });
 
         }
+
+
+
+
+
 
         //Fetches data using a cellset from the analysis server
         //GET https://localhost:*portnumber*/api/analytics/raw --is the complete link

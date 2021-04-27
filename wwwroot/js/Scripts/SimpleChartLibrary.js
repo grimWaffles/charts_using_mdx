@@ -1,27 +1,272 @@
-﻿//Create a bar chart 
-function createBarChart(container,data) {
+﻿//Create basic pie chart
+function createPieChart(container, y_values, x_values,title) {
+
+    var totalSales = 0.0; var y_axis_values = [];
+
+    for (var i = 0; i < y_values[0].data.length; i++) {
+        totalSales = totalSales + y_values[0].data[i];
+        console.log(y_values[0].data[i])
+    }
+    console.log("Total lifetime  sales " + totalSales)
+
+    for (var i = 0; i < y_values[0].data.length; i++) {
+        y_values[0].data[i] =  (y_values[0].data[i]*100)/totalSales;
+        console.log(y_values[0].data[i])
+
+        var y_obj = {
+            name: x_values[0].parameters[i],
+            y: y_values[0].data[i],
+            sliced:true,
+            selected:true
+        }
+
+        y_axis_values.push(y_obj)
+    }
+
+    console.log(y_axis_values);
+
+   
+
+    const chart = Highcharts.chart(container, {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: title
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        accessibility: {
+            point: {
+                valueSuffix: '%'
+            }
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                }
+            }
+        },
+        series: [{
+            name: 'Browsers',
+            colorByPoint: true,
+
+            data: y_axis_values
+        }]
+    });
+}
+
+//Create a bar chart
+function createBarChart(container, y_values, x_values, x_param_to_use, title, unit) {
+
+    //make a y-series array here to dynamically add values in case of multiple measures
+    var y_axis_data = [];
+
+    for (var i = 0; i < y_values.length; i++) {
+
+        var obj = { name: y_values[i].name, data: y_values[i].data };
+
+        y_axis_data.push(obj)
+    }
+
     const chart = Highcharts.chart(container, {
         chart: {
             type: 'bar'
         },
         title: {
-            text: 'Sales Q1 2021'
+            text: title
         },
         xAxis: {
-            categories: ['Phones', 'Tablets', 'Watches']
+            categories: x_values[x_param_to_use - 1].parameters
         },
         yAxis: {
             title: {
                 text: 'Devices Sold'
             }
         },
-        series: [{
-            name: 'Samsung',
-            data: [890000, 111120, 400000]
-        }, {
-            name: 'Apple',
-            data: [500000, 700000, 300000]
-        }]
+        series: y_axis_data
+    });
+}
+
+//create a column chart
+function createColumnChart(container, y_values, x_values, x_param_to_use, title, unit) {
+
+    //make a y-series array here to dynamically add values in case of multiple measures
+    var y_axis_data = [];
+
+    for (var i = 0; i < y_values.length; i++) {
+
+        var obj = { name: y_values[i].name, data: y_values[i].data };
+
+        y_axis_data.push(obj)
+    }
+
+    const chart2 = Highcharts.chart(container, {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: title
+        },
+
+        xAxis: {
+            categories: x_values[x_param_to_use - 1].parameters,
+            crosshair: true,
+            text: x_values[x_param_to_use - 1].name
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: unit
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} $</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 4
+            }
+        },
+        series: y_axis_data
+    });
+}
+
+//Create Line chart
+function createLineChart(container, y_values, x_values, x_param_to_use, title) {
+
+    //make a y-series array here to dynamically add values in case of multiple measures
+    var y_axis_data = [];
+
+    for (var i = 0; i < y_values.length; i++) {
+
+        var obj = { name: y_values[i].name, data: y_values[i].data };
+
+        y_axis_data.push(obj)
+    }
+
+    const chart = Highcharts.chart(container, {
+
+        title: {
+            text: title
+        },
+
+        yAxis: {
+
+        },
+
+        xAxis: {
+            accessibility: {
+                rangeDescription: 'Range:' + x_values[0].parameters[0] + ' to' + x_values[0].parameters[x_values[0].parameters.lengh - 1]
+            }
+
+        },
+
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+        },
+
+        plotOptions: {
+            series: {
+                label: {
+                    connectorAllowed: false
+                },
+                pointStart: 1
+            }
+        },
+
+        series: y_axis_data,
+
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    legend: {
+                        layout: 'horizontal',
+                        align: 'center',
+                        verticalAlign: 'bottom'
+                    }
+                }
+            }]
+        }
+    });
+}
+
+//create an areaspline chart
+function createAreaSpline(container, y_values, x_values, x_param_to_use, title) {
+
+    //make a y-series array here to dynamically add values in case of multiple measures
+    var y_axis_data = [];
+
+    for (var i = 0; i < y_values.length; i++) {
+
+        var obj = { name: y_values[i].name, data: y_values[i].data };
+
+        y_axis_data.push(obj)
+    }
+
+    const chart = Highcharts.chart(container, {
+        chart: {
+            type: 'areaspline'
+        },
+        title: {
+            text: title
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'left',
+            verticalAlign: 'top',
+            x: 150,
+            y: 100,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor:
+                Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF'
+        },
+        xAxis: {
+            categories: x_values[0].parameters,
+            plotBands: [{ // visualize the weekend
+                from: 4.5,
+                to: 6.5,
+                color: 'rgba(69, 170, 213, .2)'
+            }]
+        },
+        yAxis: {
+            title: {
+                text: 'Fruit units'
+            }
+        },
+        tooltip: {
+            shared: true,
+            valueSuffix: ' units'
+        },
+        credits: {
+            enabled: false
+        },
+        plotOptions: {
+            areaspline: {
+                fillOpacity: 0.5
+            }
+        },
+        series: y_axis_data
     });
 }
 
@@ -218,238 +463,6 @@ function createHistogram(container) {
     });
 }
 
-//Create basic pie chart
-function createPieChart(container) {
-    const chart = Highcharts.chart(container, {
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-            type: 'pie'
-        },
-        title: {
-            text: 'Browser market shares in January, 2018'
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        accessibility: {
-            point: {
-                valueSuffix: '%'
-            }
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-                }
-            }
-        },
-        series: [{
-            name: 'Browsers',
-            colorByPoint: true,
-
-            data: [{
-                name: 'Chrome',
-                y: 61.41,
-                sliced: true,
-                selected: true
-            }, {
-                name: 'Internet Explorer',
-                y: 11.84
-            }, {
-                name: 'Firefox',
-                y: 10.85
-            }, {
-                name: 'Edge',
-                y: 4.67
-            }, {
-                name: 'Safari',
-                y: 4.18
-            }, {
-                name: 'Other',
-                y: 2.61
-            }]
-        }]
-    });
-}
-
-//create a column chart
-function createColumnChart(container, y_values, x_values, x_param_to_use, title, unit) {
-
-    //make a y-series array here to dynamically add values in case of multiple measures
-    var y_axis_data = [];
-
-    for (var i = 0; i < y_values.length; i++) {
-
-        var obj = { name: y_values[i].name, data: y_values[i].data };
-
-        y_axis_data.push(obj)
-    }
-
-    const chart2 = Highcharts.chart(container, {
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: title
-        },
-
-        xAxis: {
-            categories: x_values[x_param_to_use - 1].parameters,
-            crosshair: true,
-            text: x_values[x_param_to_use - 1].name
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: unit
-            }
-        },
-        tooltip: {
-            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y:.1f} $</b></td></tr>',
-            footerFormat: '</table>',
-            shared: true,
-            useHTML: true
-        },
-        plotOptions: {
-            column: {
-                pointPadding: 0.2,
-                borderWidth: 4
-            }
-        },
-        series: y_axis_data
-    });
-}
-
-//Create Line chart
-function createLineChart(container, y_values, x_values, x_param_to_use, title) {
-
-    //make a y-series array here to dynamically add values in case of multiple measures
-    var y_axis_data = [];
-
-    for (var i = 0; i < y_values.length; i++) {
-
-        var obj = { name: y_values[i].name, data: y_values[i].data };
-
-        y_axis_data.push(obj)
-    }
-
-    const chart = Highcharts.chart(container, {
-
-        title: {
-            text: title
-        },
-
-        yAxis: {
-
-        },
-
-        xAxis: {
-            accessibility: {
-                rangeDescription: 'Range:' + x_values[0].parameters[0] + ' to' + x_values[0].parameters[x_values[0].parameters.lengh - 1]
-            }
-
-        },
-
-        legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle'
-        },
-
-        plotOptions: {
-            series: {
-                label: {
-                    connectorAllowed: false
-                },
-                pointStart: 1
-            }
-        },
-
-        series: y_axis_data,
-
-        responsive: {
-            rules: [{
-                condition: {
-                    maxWidth: 500
-                },
-                chartOptions: {
-                    legend: {
-                        layout: 'horizontal',
-                        align: 'center',
-                        verticalAlign: 'bottom'
-                    }
-                }
-            }]
-        }
-    });
-}
-
-//create an areaspline chart
-function createAreaSpline(container, y_values, x_values, x_param_to_use, title) {
-
-    //make a y-series array here to dynamically add values in case of multiple measures
-    var y_axis_data = [];
-
-    for (var i = 0; i < y_values.length; i++) {
-
-        var obj = { name: y_values[i].name, data: y_values[i].data };
-
-        y_axis_data.push(obj)
-    }
-
-    const chart = Highcharts.chart(container, {
-        chart: {
-            type: 'areaspline'
-        },
-        title: {
-            text: title
-        },
-        legend: {
-            layout: 'vertical',
-            align: 'left',
-            verticalAlign: 'top',
-            x: 150,
-            y: 100,
-            floating: true,
-            borderWidth: 1,
-            backgroundColor:
-                Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF'
-        },
-        xAxis: {
-            categories: x_values[0].parameters,
-            plotBands: [{ // visualize the weekend
-                from: 4.5,
-                to: 6.5,
-                color: 'rgba(69, 170, 213, .2)'
-            }]
-        },
-        yAxis: {
-            title: {
-                text: 'Fruit units'
-            }
-        },
-        tooltip: {
-            shared: true,
-            valueSuffix: ' units'
-        },
-        credits: {
-            enabled: false
-        },
-        plotOptions: {
-            areaspline: {
-                fillOpacity: 0.5
-            }
-        },
-        series: y_axis_data
-    });
-}
 
 //create error bar
 function createErrorBar(container) {

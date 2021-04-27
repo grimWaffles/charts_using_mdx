@@ -17,7 +17,8 @@ namespace ChartsUsingMdx.Controllers
         private string DefaultQuery { get; set; }
         private string QuerySecond { get; set; }
         private string QueryThird { get; set; }
-        
+        private string QueryFourth { get; set; }
+
         public AnalyticsController()
         {
             this.ConnString = "Data Source=DESKTOP-7FOU4BG; Catalog=Cube Basics 3";
@@ -47,6 +48,8 @@ namespace ChartsUsingMdx.Controllers
             this.QueryThird = "select non empty {[Measures].[Total Product Cost],[Measures].[Unit Price]} on columns," +
                                 "({[Dim Sales Territory 1].[Sales Territory Key].[Sales Territory Key]}) on rows " +
                                 "from[Adventure Works DW2016]";
+
+            this.QueryFourth = "select non empty {[Measures].[Sales Amount]} on columns,"+ "({[Dim Sales Territory 1].[Sales Territory Country].[Sales Territory Country]}) on rows from [Adventure Works DW2016]";
         }
 
         public IActionResult Index()
@@ -96,7 +99,12 @@ namespace ChartsUsingMdx.Controllers
             AdomdConnection conn = new AdomdConnection(ConnString);
             conn.Open();
 
-            string commandText = (id==2) ? QuerySecond: QueryThird;
+            string commandText = "";
+
+            if (id == 1) {  commandText = DefaultQuery; }
+            else if (id == 2) {  commandText = QuerySecond; }
+            else if (id == 3) {  commandText = QueryThird; }
+            else if (id == 4) {  commandText = QueryFourth; }
 
             AdomdCommand adomdCommand = new AdomdCommand(commandText, conn);
 

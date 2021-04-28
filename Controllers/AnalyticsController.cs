@@ -18,6 +18,7 @@ namespace ChartsUsingMdx.Controllers
         private string QuerySecond { get; set; }
         private string QueryThird { get; set; }
         private string QueryFourth { get; set; }
+        private string QueryFifth { get; set; }
 
         public AnalyticsController()
         {
@@ -50,6 +51,8 @@ namespace ChartsUsingMdx.Controllers
                                 "from[Adventure Works DW2016]";
 
             this.QueryFourth = "select non empty {[Measures].[Sales Amount]} on columns,"+ "({[Dim Sales Territory 1].[Sales Territory Country].[Sales Territory Country]}) on rows from [Adventure Works DW2016]";
+
+            this.QueryFifth = "select {[Measures].[Sales Amount]} on columns," + "({[Due Date].[Calendar Year].&[2011]:null},{[Due Date].[English Month Name].[English Month Name]}) on rows from [Adventure Works DW2016]";
         }
 
         public IActionResult Index()
@@ -105,6 +108,7 @@ namespace ChartsUsingMdx.Controllers
             else if (id == 2) {  commandText = QuerySecond; }
             else if (id == 3) {  commandText = QueryThird; }
             else if (id == 4) {  commandText = QueryFourth; }
+            else if (id == 5) { commandText = QueryFifth; }
 
             AdomdCommand adomdCommand = new AdomdCommand(commandText, conn);
 

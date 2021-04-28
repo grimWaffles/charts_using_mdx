@@ -1,5 +1,7 @@
 ﻿//Create basic pie chart
-function createPieChart(container, y_values, x_values,title) {
+function createPieChart(container, y_values, x_values, title) {
+
+    console.log("Only the first arrays of both measures and dimensions are taken to make the pie chart")
 
     var totalSales = 0.0; var y_axis_values = [];
 
@@ -56,7 +58,7 @@ function createPieChart(container, y_values, x_values,title) {
             }
         },
         series: [{
-            name: 'Browsers',
+            name: 'Sales',
             colorByPoint: true,
 
             data: y_axis_values
@@ -270,7 +272,68 @@ function createAreaSpline(container, y_values, x_values, x_param_to_use, title) 
     });
 }
 
-//Gantt Chart
+//Create a histogram
+function createHistogram(container,y_values,title) {
+
+    var data = [3.5, 3, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.4, 2.9, 2.7, 2, 3, 2.2, 2.9, 2.9, 3.1, 3, 2.7, 2.2, 2.5, 3.2, 2.8, 2.5, 2.8, 2.9, 3, 2.8, 3, 2.9, 2.6, 2.4, 2.4, 2.7, 2.7, 3, 3.4, 3.1, 2.3, 3, 2.5, 2.6, 3, 2.6, 2.3, 2.7, 3, 2.9, 2.9, 2.5, 2.8, 3.3, 2.7, 3, 2.9, 3, 3, 2.5, 2.9, 2.5, 3.6, 3.2, 2.7, 3, 2.5, 2.8, 3.2, 3, 3.8, 2.6, 2.2, 3.2, 2.8, 2.8, 2.7, 3.3, 3.2, 2.8, 3, 2.8, 3, 2.8, 3.8, 2.8, 2.8, 2.6, 3, 3.4, 3.1, 3, 3.1, 3.1, 3.1, 2.7, 3.2, 3.3, 3, 2.5, 3, 3.4, 3];
+
+    if (y_values != null) {data=y_values}
+
+    const chart = Highcharts.chart(container, {
+        title: {
+            text: title
+        },
+
+        xAxis: [{
+            title: { text: 'Data' },
+            alignTicks: false
+        }, {
+            title: { text: 'Histogram' },
+            alignTicks: false,
+            opposite: true
+        }],
+
+        yAxis: [{
+            title: { text: 'Data' }
+        }, {
+            title: { text: 'Histogram' },
+            opposite: true
+        }],
+
+        plotOptions: {
+            histogram: {
+                accessibility: {
+                    pointDescriptionFormatter: function (point) {
+                        var ix = point.index + 1,
+                            x1 = point.x.toFixed(3),
+                            x2 = point.x2.toFixed(3),
+                            val = point.y;
+                        return ix + '. ' + x1 + ' to ' + x2 + ', ' + val + '.';
+                    }
+                }
+            }
+        },
+
+        series: [{
+            name: 'Histogram',
+            type: 'histogram',
+            xAxis: 1,
+            yAxis: 1,
+            baseSeries: 's1',
+            zIndex: -1
+        }, {
+            name: 'Data',
+            type: 'scatter',
+            data: data,
+            id: 's1',
+            marker: {
+                radius: 1.5
+            }
+        }]
+    });
+}
+
+//Gantt Chart not for analytics  yet
 function createGanttChart(container) {
     const chart = Highcharts.ganttChart(container, {
         title: {
@@ -404,64 +467,7 @@ function createWaterFallChart(container) {
     });
 
 }
-//Create a histogram
-function createHistogram(container) {
 
-    var data = [3.5, 3, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4,2.4, 2.9, 2.7, 2, 3, 2.2, 2.9, 2.9, 3.1, 3, 2.7, 2.2, 2.5, 3.2, 2.8, 2.5, 2.8, 2.9, 3, 2.8, 3, 2.9, 2.6, 2.4, 2.4, 2.7, 2.7, 3, 3.4, 3.1, 2.3, 3, 2.5, 2.6, 3, 2.6, 2.3, 2.7, 3, 2.9, 2.9, 2.5, 2.8, 3.3, 2.7, 3, 2.9, 3, 3, 2.5, 2.9, 2.5, 3.6, 3.2, 2.7, 3, 2.5, 2.8, 3.2, 3, 3.8, 2.6, 2.2, 3.2, 2.8, 2.8, 2.7, 3.3, 3.2, 2.8, 3, 2.8, 3, 2.8, 3.8, 2.8, 2.8, 2.6, 3, 3.4, 3.1, 3, 3.1, 3.1, 3.1, 2.7, 3.2, 3.3, 3, 2.5, 3, 3.4, 3];
-
-    const chart=Highcharts.chart(container, {
-        title: {
-            text: 'Highcharts Histogram'
-        },
-
-        xAxis: [{
-            title: { text: 'Data' },
-            alignTicks: false
-        }, {
-            title: { text: 'Histogram' },
-            alignTicks: false,
-            opposite: true
-        }],
-
-        yAxis: [{
-            title: { text: 'Data' }
-        }, {
-            title: { text: 'Histogram' },
-            opposite: true
-        }],
-
-        plotOptions: {
-            histogram: {
-                accessibility: {
-                    pointDescriptionFormatter: function (point) {
-                        var ix = point.index + 1,
-                            x1 = point.x.toFixed(3),
-                            x2 = point.x2.toFixed(3),
-                            val = point.y;
-                        return ix + '. ' + x1 + ' to ' + x2 + ', ' + val + '.';
-                    }
-                }
-            }
-        },
-
-        series: [{
-            name: 'Histogram',
-            type: 'histogram',
-            xAxis: 1,
-            yAxis: 1,
-            baseSeries: 's1',
-            zIndex: -1
-        }, {
-            name: 'Data',
-            type: 'scatter',
-            data: data,
-            id: 's1',
-            marker: {
-                radius: 1.5
-            }
-        }]
-    });
-}
 
 
 //create error bar

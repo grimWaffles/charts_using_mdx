@@ -399,3 +399,4 @@ D:\Work\Dev\C# DotNet\Web Apps\ChartsUsingMdx\obj\Debug\netcoreapp3.1\ChartsUsin
 D:\Work\Dev\C# DotNet\Web Apps\ChartsUsingMdx\obj\Debug\netcoreapp3.1\ChartsUsingMdx.pdb
 D:\Work\Dev\C# DotNet\Web Apps\ChartsUsingMdx\obj\Debug\netcoreapp3.1\ChartsUsingMdx.genruntimeconfig.cache
 D:\Work\Dev\C# DotNet\Web Apps\ChartsUsingMdx\obj\Debug\netcoreapp3.1\Razor\Views\Analytics\Index.cshtml.g.cs
+D:\Work\Dev\C# DotNet\Web Apps\ChartsUsingMdx\obj\Debug\netcoreapp3.1\Razor\Views\Cubes\Index.cshtml.g.cs

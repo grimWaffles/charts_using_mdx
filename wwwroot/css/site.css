@@ -80,8 +80,16 @@ body {
     float: left;
     padding: 10px;
     
-}  
-
-h5{
-    color:red;
 }
+select{
+    
+    border-radius:2px;
+    margin:5px;
+}
+.parameter-container{
+    float:left;
+    margin-right:20px;
+    
+    
+}
+

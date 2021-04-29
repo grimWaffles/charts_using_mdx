@@ -5,7 +5,7 @@ function getDataFromServer() {
 
     console.log("The process has started!")  
 
-    fetch('https://localhost:44335/analytics/json?id=5')
+    fetch('https://localhost:44335/analytics/api/chartdata?id=5')
         .then(response => {
             return response.json();
         })
@@ -19,7 +19,7 @@ function getDataFromServer() {
         })
         .catch(error => { console.log(error) })
 
-    fetch('https://localhost:44335/analytics/json?id=3')
+    fetch('https://localhost:44335/analytics/api/chartdata?id=3')
         .then(response => {
             return response.json();
         })
@@ -34,7 +34,7 @@ function getDataFromServer() {
         })
         .catch(error => { console.log(error) })
 
-    fetch('https://localhost:44335/analytics/json?id=4')
+    fetch('https://localhost:44335/analytics/api/chartdata?id=4')
         .then(response => {
             return response.json();
         })
@@ -47,7 +47,7 @@ function getDataFromServer() {
         })
         .catch(error => { console.log(error) })
 
-    fetch('https://localhost:44335/analytics/json?id=5')
+    fetch('https://localhost:44335/analytics/api/chartdata?id=5')
         .then(response => {
             return response.json();
         })
